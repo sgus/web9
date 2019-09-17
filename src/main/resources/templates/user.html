@@ -1,0 +1,65 @@
+<!doctype html>
+
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <link rel="stylesheet" href="../css/bootstrap.css" th:href="@{/css/bootstrap.css}"/>
+    <link rel="stylesheet" href="../css/app.css" th:href="@{/css/app.css}"/>
+    <link rel="stylesheet" type="text/css" href="../css/fontawesome.css" th:href="@{/css/fontawesome.css}">
+    <link rel="stylesheet" type="text/css" href="../css/brands.css" th:href="@{/css/brands.css}">
+    <link rel="stylesheet" type="text/css" href="../css/solid.css" th:href="@{/css/solid.css}">
+    <base href="/">
+    <title>Hello, world!</title>
+</head>
+<body>
+<header>
+    <nav class="navbar sticky-top navbar-light bg-dark">
+        <a class="navbar-brand text-white" href="#">Project name</a>
+        <a class="navbar-brand text-white" href="#">Logout</a>
+    </nav>
+
+</header>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <aside class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
+            <div id="sidebar-wrapper">
+                <div class="row">
+                    <div class="nav flex-column nav-pills btn-block" id="v-pills-tab" role="tablist"
+                         aria-orientation="vertical" th:each="role : ${roles}">
+
+
+                        <a th:href="@{/{role}(role=${#strings.toLowerCase(role)})}"
+                           class="nav-link active b tn-block btn-lg"
+                           th:text="${role}"
+                           th:if="${#execInfo.getProcessedTemplateName().equals(#strings.toLowerCase(role))}"></a>
+                        <a th:href="@{/{role}(role=${#strings.toLowerCase(role)})}" class="nav-link  b tn-block btn-lg"
+                           th:text="${role}"
+                           th:if="${not #execInfo.getProcessedTemplateName().equals(#strings.toLowerCase(role))}"></a>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </aside>
+
+
+        <main class="col-xs-12 col-sm-8 col-md-9 col-lg-10">
+
+
+                    User Page...
+
+
+
+        </main>
+    </div>
+
+
+</div>
+<script src="../static/js/jquery-3.4.1.js" th:src="@{/js/jquery-3.4.1.js}"></script>
+<script src="../static/js/bootstrap.js" th:src="@{/js/bootstrap.js}"></script>
+<script src="../static/js/fontawesome.js" th:src="@{/js/fontawesome.js}"></script>
+</body>
+</html>

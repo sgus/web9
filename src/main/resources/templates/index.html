@@ -1,0 +1,42 @@
+<!doctype html>
+
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <link rel="stylesheet" href="../css/bootstrap.css" th:href="@{/css/bootstrap.css}"/>
+    <link rel="stylesheet"  href="../css/app.css" th:href="@{/css/app.css}"/>
+    <link rel="stylesheet" type="text/css" href="../css/fontawesome.css" th:href="@{/css/fontawesome.css}">
+    <link rel="stylesheet" type="text/css" href="../css/brands.css" th:href="@{/css/brands.css}">
+    <link rel="stylesheet" type="text/css" href="../css/solid.css" th:href="@{/css/solid.css}">
+    <base href="/">
+    <title>Hello, world!</title>
+</head>
+<body>
+
+<div class="container" style="margin-top: 100px">
+    <div class="row">
+        <div class="container formContainer" >
+
+            <form th:action="@{/loginAction}" method="POST" class="form-signin  mg-btm">
+                <h3 class="form-signin-heading">Please sign in</h3>
+                <input type="text" id="email" name="email" th:placeholder="Email"
+                       class="form-control" value="a@a.a"/>
+                <input type="password" th:placeholder="Password"
+                       id="password" name="password" class="form-control" value="a"/>
+
+                <div align="center" th:if="${param.error}">
+                    <p style="font-size: 20; color: #FF1C19;">Email or Password invalid, please verify</p>
+                </div>
+
+                <button class="btn btn-lg btn-primary btn-block" name="Submit" value="Login" type="Submit" style="margin-top: 10px">Sign in
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="../static/js/jquery-3.4.1.js" th:src="@{/js/jquery-3.4.1.js}"></script>
+<script src="../static/js/bootstrap.js" th:src="@{/js/bootstrap.js}"></script>
+<script src="../static/js/fontawesome.js" th:src="@{/js/fontawesome.js}"></script>
+</body>
+</html>
