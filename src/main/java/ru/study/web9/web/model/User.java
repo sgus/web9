@@ -1,14 +1,8 @@
 package ru.study.web9.web.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-import org.springframework.security.core.GrantedAuthority;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity(name = "User")
 @Table(name = "users", schema = "web6_db")
@@ -37,9 +31,7 @@ public class User {
     List<Role> roles = new ArrayList<Role>();
 
 
-    @Column(name = "rating")
-    @ColumnDefault("0")
-    private Long rating;
+
 
     public User() {
     }
@@ -50,7 +42,6 @@ public class User {
         this.email = email;
         this.password = password;
         this.roles = roles;
-        this.rating = rating;
     }
 
     public User(String name, String email, String password) {
@@ -59,12 +50,11 @@ public class User {
         this.password = password;
     }
 
-    public User(String login, String email, String password, List<Role> roles, Long rating) {
+    public User(String login, String email, String password, List<Role> roles ) {
         this.login = login;
         this.email = email;
         this.password = password;
         this.roles = roles;
-        this.rating = rating;
     }
 
     public User(String login, String password) {
@@ -80,7 +70,6 @@ public class User {
                 ", email='" + this.email + '\'' +
                 ", password='" + this.password + '\'' +
                 ", role='" + this.roles.toString() + '\'' +
-                ", rating=" + this.rating +
                 '}';
     }
 
@@ -124,11 +113,5 @@ public class User {
         this.roles = roles;
     }
 
-    public Long getRating() {
-        return rating;
-    }
 
-    public void setRating(Long rating) {
-        this.rating = rating;
-    }
 }

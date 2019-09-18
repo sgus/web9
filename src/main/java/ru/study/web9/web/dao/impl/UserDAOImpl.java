@@ -18,38 +18,47 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public List getAllUsers() {
-        return null;
+        List query = entityManager.createQuery("SELECT u FROM User u", User.class).getResultList();
+        System.out.println("UserDAO-------------------");
+        query.stream().forEach(o -> System.out.println(o));
+        return query;
     }
 
     @Override
     public void addUser(User user) {
-
+        entityManager.persist(user);
     }
 
     @Override
     public void removeUserByLogin(String login) {
-
+        Query query = entityManager.createQuery("delete from User where login=:login");
+        query.setParameter("login", login).executeUpdate();
     }
 
     @Override
     public User getUserById(long id) {
-        return null;
+        return entityManager.find(User.class, id);
     }
 
     @Override
     public User getUserByLogin(String login) {
-        return null;
+        return entityManager.find(User.class, login);
     }
 
     @Override
     public void removeUserById(Long id) {
-
+        Query query = entityManager.createQuery("delete from User where id = :ID");
+        query.setParameter("ID", id);
+        query.executeUpdate();
     }
+
+
 
     @Override
     public void updateUser(User user) {
-
+        entityManager.merge(user);
     }
+
 
     @Override
     public boolean validateUser(User user) {

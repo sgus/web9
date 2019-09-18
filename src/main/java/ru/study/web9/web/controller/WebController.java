@@ -6,9 +6,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import ru.study.web9.web.model.User;
+import ru.study.web9.web.service.RoleService;
 import ru.study.web9.web.service.UserService;
 
 import java.util.List;
@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
 public class WebController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private RoleService roleService;
 
     @GetMapping("/index")
     public String index() {
@@ -37,6 +39,13 @@ public class WebController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         List roles = (auth.getAuthorities().stream().map(o -> ((GrantedAuthority) o).getAuthority().substring(5)).collect(Collectors.toList()));
         model.addAttribute("roles", roles);
+        List<User> allUsers = userService.getAllUsers();
+        model.addAttribute("users", allUsers);
+        model.addAttribute("userT", new User());
+
+
+        model.addAttribute("roleList", roleService.getAllRoles());
+
         return "admin";
     }
 
@@ -44,17 +53,43 @@ public class WebController {
     public String page(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         List roles = (auth.getAuthorities().stream().map(o -> ((GrantedAuthority) o).getAuthority().substring(5)).collect(Collectors.toList()));
-        System.out.println(roles);
         if (auth.getAuthorities().stream().anyMatch(o -> ((GrantedAuthority) o).getAuthority().equals("ROLE_ADMIN"))) {
             model.addAttribute("roles", roles);
-            return "admin";
+            return "redirect:/admin";
 
         } else if (auth.getAuthorities().stream().anyMatch(o -> ((GrantedAuthority) o).getAuthority().equals("ROLE_USER"))) {
-            model.addAttribute("roles", roles);
-            return "user";
+            return "redirect:/user";
         }
         return "index";
 
+    }
+
+
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    public String delete(@RequestParam(name = "id", required = false) Long id) {
+        System.out.println("=========================");
+        System.out.println(id);
+//        userService.deleteById(id);
+        return "redirect:/admin";
+    }
+
+
+    @RequestMapping(value = "/edit", method = RequestMethod.POST)
+    public String edit(@ModelAttribute("userT") User user) {
+//        userService.updateUser(user);
+        System.out.println("********************************");
+        System.out.println(user.getLogin());
+        System.out.println(user.toString());
+        return "redirect:/admin";
+    }
+
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    public String create(@ModelAttribute("userT") User user) {
+//        userService.updateUser(user);
+        System.out.println("********************************");
+        System.out.println(user.getLogin());
+        System.out.println(user.toString());
+        return "redirect:/admin";
     }
 
 }

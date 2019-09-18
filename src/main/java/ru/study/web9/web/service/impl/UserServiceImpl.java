@@ -70,7 +70,6 @@ public class UserServiceImpl implements UserService {
         }
         userById.setLogin(user.getLogin());
         userById.setPassword(user.getPassword());
-        userById.setRating(user.getRating());
         dao.updateUser(userById);
     }
 
