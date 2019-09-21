@@ -6,7 +6,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.study.web9.web.model.Role;
 import ru.study.web9.web.model.User;
 import ru.study.web9.web.service.RoleService;
 import ru.study.web9.web.service.UserService;
@@ -69,27 +71,58 @@ public class WebController {
     public String delete(@RequestParam(name = "id", required = false) Long id) {
         System.out.println("=========================");
         System.out.println(id);
-//        userService.deleteById(id);
+        userService.deleteById(id);
         return "redirect:/admin";
     }
 
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
-    public String edit(@ModelAttribute("userT") User user) {
-//        userService.updateUser(user);
-        System.out.println("********************************");
-        System.out.println(user.getLogin());
-        System.out.println(user.toString());
+    public String edit(@ModelAttribute("user") User user,
+                       @RequestParam(value = "rols", required = false) int[] rols,
+                       BindingResult bindingResult, Model model) {
+        if (rols != null) {
+            Role role = null;
+            for (int i = 0; i < rols.length; i++) {
+
+                role = roleService.getRoleById(rols[i]);
+                role.setId(rols[i]);
+                user.getRoles().add(role);
+            }
+            for (int i = 0; i < user.getRoles().size(); i++) {
+                System.out.println(user.getRoles().get(i));
+            }
+        }
+
+        userService.updateUser(user);
+
         return "redirect:/admin";
+
     }
+
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public String create(@ModelAttribute("userT") User user) {
-//        userService.updateUser(user);
-        System.out.println("********************************");
-        System.out.println(user.getLogin());
-        System.out.println(user.toString());
-        return "redirect:/admin";
-    }
+    public String create(@ModelAttribute("user") User user,
+                         @RequestParam(value = "rols", required = false) int[] rols,
+                         BindingResult bindingResult, Model model) {
+        if (rols != null) {
+            Role role = null;
+            for (int i = 0; i < rols.length; i++) {
 
+                role = roleService.getRoleById(rols[i]);
+                role.setId(rols[i]);
+                user.getRoles().add(role);
+            }
+            for (int i = 0; i < user.getRoles().size(); i++) {
+                System.out.println(user.getRoles().get(i));
+            }
+        }
+
+        System.out.println("********************************");
+        System.out.println(user.toString());
+        System.out.println("********************************");
+        userService.addUser(user);
+
+        return "redirect:/admin";
+
+    }
 }
