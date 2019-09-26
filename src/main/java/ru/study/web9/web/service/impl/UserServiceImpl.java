@@ -47,10 +47,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addUser(User user) {
 
-            List<Role> roles = new ArrayList<Role>();
-            user.getRoles().forEach(role -> roles.add(roleDAO.getRoleByName(role.getName())));
-            user.setRoles(roles);
-        user.getRoles().forEach(role -> System.out.println(role.getId()+" "+role.getName()));
+        List<Role> roles = new ArrayList<Role>();
+        user.getRoles().forEach(role -> roles.add(roleDAO.getRoleByName(role.getName())));
+        user.setRoles(roles);
+        user.getRoles().forEach(role -> System.out.println(role.getId() + " " + role.getName()));
 
         dao.addUser(user);
     }

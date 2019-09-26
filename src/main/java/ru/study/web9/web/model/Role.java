@@ -1,6 +1,7 @@
 package ru.study.web9.web.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,8 +19,6 @@ public class Role implements GrantedAuthority {
     private long id;
     @Column(name = "name",nullable = false)
     private String name;
-    @ManyToMany(mappedBy="roles")
-    private List<User> users= new ArrayList<User>();
 
     public Role(String name) {
         this.name = name;
@@ -49,11 +48,12 @@ public class Role implements GrantedAuthority {
         this.name = name;
     }
 
-    public List<User> getUsers() {
-        return users;
-    }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
+
+    @Override
+    public String toString() {
+        return "Role{" +
+                "id=" + id +
+                ", name='" + name + '\''  +'}';
     }
 }

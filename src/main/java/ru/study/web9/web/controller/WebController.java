@@ -88,9 +88,7 @@ public class WebController {
                 role.setId(rols[i]);
                 user.getRoles().add(role);
             }
-            for (int i = 0; i < user.getRoles().size(); i++) {
-                System.out.println(user.getRoles().get(i));
-            }
+
         }
 
         userService.updateUser(user);
@@ -112,9 +110,7 @@ public class WebController {
                 role.setId(rols[i]);
                 user.getRoles().add(role);
             }
-            for (int i = 0; i < user.getRoles().size(); i++) {
-                System.out.println(user.getRoles().get(i));
-            }
+
         }
 
         System.out.println("********************************");

@@ -1,12 +1,15 @@
 package ru.study.web9.web.model;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity(name = "User")
 @Table(name = "users", schema = "web6_db")
-public class User {
+public class User implements UserDetails {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +22,7 @@ public class User {
     private String password;
 
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(name = "user_role",
             joinColumns = {
                     @JoinColumn(name = "user_id",
@@ -28,20 +31,25 @@ public class User {
                     @JoinColumn(name = "role_id",
                             referencedColumnName = "id")
             })
-    List<Role> roles = new ArrayList<Role>();
-
-
+    Collection<Role> roles = new ArrayList<Role>();
 
 
     public User() {
     }
 
-    public User(long id, String login, String email, String password, List<Role> roles, Long rating) {
+    public User(long id, String login, String email, String password, List<Role> roles) {
         this.id = id;
         this.login = login;
         this.email = email;
         this.password = password;
         this.roles = roles;
+    }
+
+    public User(long id, String login, String email, String password) {
+        this.id = id;
+        this.login = login;
+        this.email = email;
+        this.password = password;
     }
 
     public User(String name, String email, String password) {
@@ -50,7 +58,7 @@ public class User {
         this.password = password;
     }
 
-    public User(String login, String email, String password, List<Role> roles ) {
+    public User(String login, String email, String password, List<Role> roles) {
         this.login = login;
         this.email = email;
         this.password = password;
@@ -60,6 +68,12 @@ public class User {
     public User(String login, String password) {
         this.login = login;
         this.password = password;
+    }
+
+    public User(String email, String password, Collection<? extends GrantedAuthority> authorities) {
+        this.email = email;
+        this.password = password;
+        this.roles = (Collection<Role>) authorities;
     }
 
     @Override
@@ -97,15 +111,47 @@ public class User {
         this.email = email;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+
+
+        return roles;
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.getEmail();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public List<Role> getRoles() {
+    public Collection<Role> getRoles() {
         return roles;
     }
 
