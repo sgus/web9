@@ -31,7 +31,7 @@ public class User implements UserDetails {
                     @JoinColumn(name = "role_id",
                             referencedColumnName = "id")
             })
-    Collection<Role> roles = new ArrayList<Role>();
+    Collection<Role> roles = new ArrayList<>();
 
 
     public User() {
@@ -155,9 +155,7 @@ public class User implements UserDetails {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(Collection<Role> roles) {
         this.roles = roles;
     }
-
-
 }

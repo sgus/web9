@@ -138,14 +138,15 @@
                                                                 <input class="form-control" id="password-text-new"
                                                                        th:field="*{password}"/>
                                                             </div>
-                                                            <div class="form-group">
+                                                            <div class="form-group " id="rolesBoxCreateUser">
                                                                 <label
                                                                         class="col-form-label"></label>
                                                                 <th:block
                                                                         th:each="role : ${roleList}">
                                                                     <input type="checkbox"
                                                                            name="rols"
-                                                                           th:value="${role.id}"/>
+                                                                           th:attr="data-id=${role.id}, data-name=${role.name}"
+                                                                          />
                                                                     <label th:text="${role.name}"></label>
                                                                 </th:block>
 
@@ -191,7 +192,7 @@
 
                         <div class="modal-body">
                             <form id="modalForm">
-                                    <fieldset>
+                                <fieldset>
                                     <div class="form-group ">
                                         <label for="id-text"
                                                class="col-form-label">ID:</label>

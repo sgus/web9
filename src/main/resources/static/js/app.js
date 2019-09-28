@@ -54,7 +54,7 @@ $('#editModal').on('show.bs.modal', function (event) {
         }
     });
 
-    console.log(roles)
+    console.log(roles);
 
     $('#rolesBox').empty();
     var modal = $(this);
@@ -71,9 +71,11 @@ $('#editModal').on('show.bs.modal', function (event) {
     }
     for (var i = 0; i < roles.length; i++) {
         if (idOfUserRoles.includes(roles[i].id)) {
-            $('#rolesBox').append("<input type='checkbox' checked name ='rols' value=" + roles[i].id + " /> <label>" + roles[i].name + "</label> </br>");
+            $('#rolesBox').append("<input type='checkbox'  checked name ='rols' value=" + roles[i].id + " /> <label>" + roles[i].name + "</label> </br>");
+            $.data(($('#rolesBox input')[i]), ("role", {id: roles[i].id, name: roles[i].name}))
         } else {
             $('#rolesBox').append("<input type='checkbox'  name ='rols' value=" + roles[i].id + " /> <label>" + roles[i].name + "</label> </br>")
+            $.data(($('#rolesBox input')[i]), ("role", {id: roles[i].id, name: roles[i].name}))
         }
     }
 });
@@ -83,26 +85,30 @@ function updateUser() {
     $("#modalForm").on("submit", function (e) {
         e.preventDefault();
         var formData = new FormData(this);
-
+        var roles = [];
+        for (var i = 0; i < $('#rolesBox input').length; i++) {
+            if ($('#rolesBox input')[i].checked) {
+                roles.push($.data(($('#rolesBox input')[i])))
+            }
+        }
         var user = ({
-            id: (parseInt(formData.get("id"))),
-            login: (formData.get("login")),
-            email: (formData.get("email")),
-            password: (formData.get("password")),
-            roles: formData.getAll("rols")
+            'id': (parseInt(formData.get("id"))),
+            'login': (formData.get("login")),
+            'email': (formData.get("email")),
+            'password': (formData.get("password")),
+            'roles': (roles)
         });
 
 
-        console.log($('div#rolesBox'));
-
-
+        var d = {
+            'user': (user),//{"id":12,"login":"b","email":"b@b.b","password":"b"}
+            'roles1': (roles)//[{"id":1,"name":"ROLE_ADMIN"},{"id":2,"name":"ROLE_USER"}]
+        };
         $.ajax("/users/update/" + formData.get("id"), {
             type: "post",
-            contentType: 'application/json; charset=utf-8',
-            dataType: 'html',
+            dataType: "json",
+            contentType: "application/json",
             data: JSON.stringify(user),
-            cache: false,
-            processData: false,
             success: function () {
                 $("#editModal").modal('hide');
                 getListUser();
@@ -119,21 +125,29 @@ function createUser() {
     $("#createUserForm").on("submit", function (e) {
         e.preventDefault();
         var formData = new FormData(this);
+        var roles = [];
+        for (var i = 0; i < $('#rolesBoxCreateUser input').length; i++) {
+            if ($('#rolesBoxCreateUser input')[i].checked) {
+                let id = ($('#rolesBoxCreateUser input')[i]).dataset.id;
+                let name = ($('#rolesBoxCreateUser input')[i]).dataset.name;
 
+                roles.push($.parseJSON('{ "id": ' + id + ',"name": "' + (name) + '"}'))
+            }
+        }
+        console.log(roles)
         var user = ({
-            id: (parseInt(formData.get("id"))),
-            login: (formData.get("login")),
-            email: (formData.get("email")),
-            password: (formData.get("password")),
-            roles: (formData.getAll("rols"))
 
+            'login': (formData.get("login")),
+            'email': (formData.get("email")),
+            'password': (formData.get("password")),
+            'roles': roles
         });
         console.log(user);
 
         $.ajax("/users/create/", {
             type: "post",
-            contentType: 'application/json; charset=utf-8',
-            dataType: 'html',
+            contentType: 'application/json',
+            dataType: 'json',
             data: JSON.stringify(user),
             cache: false,
             processData: false,

@@ -1,7 +1,10 @@
 package ru.study.web9.web.controller;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,15 +30,15 @@ public class WebControllerRest {
 
     @GetMapping(path = "/list", produces = "application/json")
     public List<User> list() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        List roles = (auth.getAuthorities().stream().map(o -> ((GrantedAuthority) o).getAuthority().substring(5)).collect(Collectors.toList()));
         return userService.getAllUsers();
     }
 
 
     @GetMapping("/{id}")
     public User getUser(@PathVariable String id) {
-        return userService.getUserById(Long.parseLong(id));
+        User userById = userService.getUserById(Long.parseLong(id));
+        System.out.println(userById.toString());
+        return userById;
     }
 
     @GetMapping("/roles")
@@ -44,18 +47,16 @@ public class WebControllerRest {
     }
 
     @PostMapping(value = "/create", produces = "application/json")
-    public User createUser(@Valid @RequestBody User user) {
-        List<Integer> rols = user.getRoles().stream().map(role -> Integer.parseInt(role.getName())).collect(Collectors.toList());
-        user.getRoles().clear();
-        if (rols != null) {
+    public User createUser(@RequestBody User user) {
+        List<Role> roles = new ArrayList<>();
+        if (user.getRoles() != null) {
             Role role = null;
-            for (int rol : rols) {
-                role = roleService.getRoleById(rol);
-                role.setId(rol);
-                user.getRoles().add(role);
+            for (Role rol : user.getRoles()) {
+                role = roleService.getRoleById(rol.getId());
+                roles.add(role);
             }
-
         }
+        user.setRoles(roles);
         userService.addUser(user);
         return user;
     }
@@ -70,20 +71,17 @@ public class WebControllerRest {
         userById.setEmail(user.getEmail());
         userById.setLogin(user.getLogin());
         userById.setPassword(user.getPassword());
-        userById.getRoles().clear();
-
-        List<Integer> rols = user.getRoles().stream().map(role -> Integer.parseInt(role.getName())).collect(Collectors.toList());
-
-        if (rols != null) {
+        List<Role> roles = new ArrayList<>();
+        if (user.getRoles() != null) {
             Role role = null;
-            for (int rol : rols) {
-                role = roleService.getRoleById(rol);
-                role.setId(rol);
-                userById.getRoles().add(role);
+            for (Role rol : user.getRoles()) {
+                role = roleService.getRoleById(rol.getId());
+                roles.add(role);
             }
-
         }
+        userById.setRoles(roles);
         userService.updateUser(userById);
+
         return ResponseEntity.ok(userService.getUserById(userId));
     }
 
